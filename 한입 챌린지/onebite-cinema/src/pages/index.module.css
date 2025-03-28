@@ -1,0 +1,30 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
+}
+
+.container h2 {
+  margin-bottom: 0px;
+}
+
+.section_recommand {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  column-gap: 8px;
+}
+
+.section_all_movie {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  column-gap: 8px;
+  row-gap: 16px;
+}
+
+.section_recommand img,
+.section_all_movie img {
+  max-width: 100%;
+  height: auto;
+}
