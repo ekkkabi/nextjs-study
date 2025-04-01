@@ -1,4 +1,4 @@
-import MovieItem from '@/components/movie-time';
+import MovieItem from '@/components/movie-item';
 import SearchableLayout from '@/components/searchable-layout';
 import fetchMovies from '@/lib/fetch-movies';
 import fetchRandomBooks from '@/lib/fetch-random-movies';
@@ -6,7 +6,7 @@ import { InferGetServerSidePropsType } from 'next';
 import { ReactNode } from 'react';
 import style from './index.module.css';
 
-export const getServerSideProps = async () => {
+export const getStaticProps = async () => {
   const [allMovies, recomMovies] = await Promise.all([fetchMovies(), fetchRandomBooks()]);
 
   return {
@@ -20,7 +20,7 @@ export const getServerSideProps = async () => {
 export default function Home({
   allMovies,
   recomMovies,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) {
+}: InferGetServerSidePropsType<typeof getStaticProps>) {
   return (
     <div className={style.container}>
       <section>
