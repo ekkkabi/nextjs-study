@@ -23,15 +23,14 @@ export default function Home({
   allMovies,
   recomMovies,
 }: InferGetServerSidePropsType<typeof getStaticProps>) {
-
   return (
     <>
       <Head>
         <title>한입 씨네마</title>
+        <meta property='og:image' content='/thumbnail.png' />
+        <meta property='og:title' content='한입 씨네마마' />
+        <meta property='og:description' content='한입 씨네마에서 다양한 영화들을 만나보세요' />
       </Head>
-      <meta property='og:image' content='/thumbnail.png' />
-      <meta property='og:title' content='한입 씨네마마' />
-      <meta property='og:description' content='한입 씨네마에서 다양한 영화들을 만나보세요' />
       <div className={style.container}>
         <section>
           <h3>지금 가장 추천하는 영화</h3>
