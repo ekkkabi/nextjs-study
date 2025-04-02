@@ -1,7 +1,6 @@
 import fetchMovies from '@/lib/fetch-movies';
 import fetchOneBooks from '@/lib/fetch-one-movie';
 import { GetStaticPropsContext, InferGetStaticPropsType } from 'next';
-import Image from 'next/image';
 import { useRouter } from 'next/router';
 import style from './[id].module.css';
 
@@ -42,7 +41,7 @@ export default function Page({ movie }: InferGetStaticPropsType<typeof getStatic
         className={style.cover_img_container}
         style={{ backgroundImage: `url('${posterImgUrl}')` }}
       >
-        <Image src={posterImgUrl} alt='posterImg' width={233.33} height={350} />
+        <img src={posterImgUrl} />
       </div>
       <h3 className={style.title}>{title}</h3>
       <div>
