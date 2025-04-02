@@ -21,8 +21,6 @@ export default function Page() {
     if (q) fetchSearchResult();
   }, [q]);
 
-  console.log(movies);
-
   return (
     <div className={style.search_result}>
       {movies.map((ele) => (
