@@ -1,0 +1,12 @@
+.search_result {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  column-gap: 8px;
+  row-gap: 16px;
+}
+
+.search_result img {
+  max-width: 100%;
+  height: auto;
+}
