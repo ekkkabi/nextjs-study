@@ -1,9 +1,16 @@
-import movies from '@/mock/movie.json';
+import { API, apiKey } from '@/constants/api';
 import style from './page.module.css';
 
-export default async function Page() {
+export default async function Page({ params }: { params: Promise<{ id: string | string[] }> }) {
+  const movieId = (await params).id;
+  const res = await fetch(apiKey + API.MOVIEID(Number(movieId)), {
+    cache: 'force-cache',
+  });
+
+  if (!res.ok) return <div>오류가 발생했습니다...</div>;
+
   const { id, title, subTitle, company, runtime, description, posterImgUrl, releaseDate, genres } =
-    movies[10];
+    await res.json();
 
   return (
     <div className={style.container}>
