@@ -1,5 +1,24 @@
 import { API, apiKey } from '@/constants/api';
+import { MovieData } from '@/types';
+import { notFound } from 'next/navigation';
 import style from './page.module.css';
+
+export const dynamicParams = false;
+
+export async function generateStaticParams() {
+  const res = await fetch(apiKey + API.ALL, { cache: 'force-cache' });
+
+  if (!res.ok) {
+    console.error('오류가 발생했습니다');
+    return [];
+  }
+
+  const ids: MovieData[] = await res.json();
+
+  return ids.map((ele) => ({
+    id: ele.id.toString(),
+  }));
+}
 
 export default async function Page({ params }: { params: Promise<{ id: string | string[] }> }) {
   const movieId = (await params).id;
@@ -7,8 +26,10 @@ export default async function Page({ params }: { params: Promise<{ id: string | 
     cache: 'force-cache',
   });
 
-  if (!res.ok) return <div>오류가 발생했습니다...</div>;
-
+  if (!res.ok) {
+    if (res.status === 404) return notFound();
+    return <div>오류가 발생했습니다...</div>;
+  }
   const { id, title, subTitle, company, runtime, description, posterImgUrl, releaseDate, genres } =
     await res.json();
 

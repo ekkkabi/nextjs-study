@@ -12,7 +12,7 @@ export default async function Page({
 }) {
   const { q } = await searchParams;
   const res = await fetch(apiKey + API.SEARCH(q), {
-    cache: 'no-store',
+    cache: 'force-cache',
   });
   if (!res.ok) return <div>오류가 발생했습니다...</div>;
 
