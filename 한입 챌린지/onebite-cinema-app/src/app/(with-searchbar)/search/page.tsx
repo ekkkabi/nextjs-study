@@ -1,16 +1,11 @@
 import MovieItem from '@/components/movie-item';
+import MovieListSkeleton from '@/components/skeleton/movie-list-skeleton';
 import { API, apiKey } from '@/constants/api';
 import { MovieData } from '@/types';
+import { Suspense } from 'react';
 import style from './page.module.css';
 
-export default async function Page({
-  searchParams,
-}: {
-  searchParams: Promise<{
-    q?: string;
-  }>;
-}) {
-  const { q } = await searchParams;
+export async function SearchResult({ q }: { q: string }) {
   const res = await fetch(apiKey + API.SEARCH(q), {
     cache: 'force-cache',
   });
@@ -23,5 +18,19 @@ export default async function Page({
         <MovieItem key={movie.id} {...movie} />
       ))}
     </div>
+  );
+}
+
+export default async function Page({
+  searchParams,
+}: {
+  searchParams: {
+    q?: string;
+  };
+}) {
+  return (
+    <Suspense key={searchParams.q || ''} fallback={<MovieListSkeleton count={6} />}>
+      <SearchResult q={searchParams.q || ''} />
+    </Suspense>
   );
 }

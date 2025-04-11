@@ -1,6 +1,8 @@
 import MovieItem from '@/components/movie-item';
+import MovieListSkeleton from '@/components/skeleton/movie-list-skeleton';
 import { API, apiKey } from '@/constants/api';
 import { MovieData } from '@/types';
+import { Suspense } from 'react';
 import style from './page.module.css';
 
 async function AllMovies() {
@@ -23,20 +25,26 @@ async function RecoMovies() {
   return recoMovies.map((ele) => <MovieItem key={ele.id} {...ele} />);
 }
 
+export const dynamic = 'force-dynamic';
+
 export default async function Home() {
   return (
     <div className={style.conatiner}>
       <section>
         <h2>지금 가장 추천하는 영화</h2>
-        <div className={style.section_recommand}>
-          <RecoMovies />
-        </div>
+        <Suspense fallback={<MovieListSkeleton count={3} />}>
+          <div className={style.section_recommand}>
+            <RecoMovies />
+          </div>
+        </Suspense>
       </section>
       <section>
         <h3>등록된 모든 영화</h3>
-        <div className={style.section_all_movie}>
-          <AllMovies />
-        </div>
+        <Suspense fallback={<MovieListSkeleton count={10} all={true} />}>
+          <div className={style.section_all_movie}>
+            <AllMovies />
+          </div>
+        </Suspense>
       </section>
     </div>
   );
