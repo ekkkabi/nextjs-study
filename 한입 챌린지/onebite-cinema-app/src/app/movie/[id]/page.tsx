@@ -54,7 +54,9 @@ export async function MovieDetail({ movieId }: { movieId: string }) {
 }
 
 async function ReviewList({ movieId }: { movieId: string }) {
-  const res = await fetch(apiKey + API.REVIEWMOVIEID(Number(movieId)));
+  const res = await fetch(apiKey + API.REVIEWMOVIEID(Number(movieId)), {
+    next: { tags: [`review-${movieId}`] },
+  });
 
   if (!res.ok) throw new Error(`Review fetch failed ${res.statusText}`);
 
