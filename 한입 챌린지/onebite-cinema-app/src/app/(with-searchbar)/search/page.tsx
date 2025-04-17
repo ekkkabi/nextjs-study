@@ -5,7 +5,7 @@ import { MovieData } from '@/types';
 import { Suspense } from 'react';
 import style from './page.module.css';
 
-export async function SearchResult({ q }: { q: string }) {
+async function SearchResult({ q }: { q: string }) {
   const res = await fetch(apiKey + API.SEARCH(q), {
     cache: 'force-cache',
   });
@@ -21,16 +21,11 @@ export async function SearchResult({ q }: { q: string }) {
   );
 }
 
-export default async function Page({
-  searchParams,
-}: {
-  searchParams: {
-    q?: string;
-  };
-}) {
+export default async function Page({ searchParams }: { searchParams: Promise<{ q?: string }> }) {
+  const { q } = await searchParams;
   return (
-    <Suspense key={searchParams.q || ''} fallback={<MovieListSkeleton count={6} />}>
-      <SearchResult q={searchParams.q || ''} />
+    <Suspense key={q || ''} fallback={<MovieListSkeleton count={6} />}>
+      <SearchResult q={q || ''} />
     </Suspense>
   );
 }

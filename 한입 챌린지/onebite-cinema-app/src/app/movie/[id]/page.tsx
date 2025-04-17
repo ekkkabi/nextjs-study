@@ -2,6 +2,8 @@ import ReviewEditor from '@/components/review-editor';
 import { RevieItem } from '@/components/review-item';
 import { API, apiKey } from '@/constants/api';
 import { MovieData, ReviewData } from '@/types';
+import { Metadata } from 'next';
+import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import style from './page.module.css';
 
@@ -10,10 +12,7 @@ export const dynamicParams = false;
 export async function generateStaticParams() {
   const res = await fetch(apiKey + API.ALL, { cache: 'force-cache' });
 
-  if (!res.ok) {
-    console.error('오류가 발생했습니다');
-    return [];
-  }
+  if (!res.ok) throw new Error(res.statusText);
 
   const ids: MovieData[] = await res.json();
 
@@ -22,7 +21,7 @@ export async function generateStaticParams() {
   }));
 }
 
-export async function MovieDetail({ movieId }: { movieId: string }) {
+async function MovieDetail({ movieId }: { movieId: string }) {
   const res = await fetch(apiKey + API.MOVIEID(Number(movieId)), {
     cache: 'force-cache',
   });
@@ -40,7 +39,7 @@ export async function MovieDetail({ movieId }: { movieId: string }) {
         className={style.cover_img_container}
         style={{ backgroundImage: `url('${posterImgUrl}')` }}
       >
-        <img src={posterImgUrl} />
+        <Image src={posterImgUrl} width={240} height={320} alt={`${title}의 표지`} />
       </div>
       <h3 className={style.title}>{title}</h3>
       <div>
@@ -71,8 +70,38 @@ async function ReviewList({ movieId }: { movieId: string }) {
   );
 }
 
-export default function Page({ params }: { params: { id: string } }) {
-  const id = params.id;
+type PagePrams = Promise<{ id: string }>;
+
+export async function generateMetadata({
+  params,
+}: {
+  params: PagePrams;
+}): Promise<Metadata | null> {
+  const { id } = await params;
+  const res = await fetch(apiKey + API.MOVIEID(Number(id)));
+
+  if (!res.ok) throw new Error(res.statusText);
+
+  const movie: MovieData = await res.json();
+
+  return {
+    title: `${movie.title}`,
+    description: `${movie.description}`,
+    openGraph: {
+      title: `${movie.title} - 한입 씨네마`,
+      description: `${movie.description}`,
+      images: [
+        {
+          url: movie.posterImgUrl,
+          alt: `${movie.title}의 표지 이미지`,
+        },
+      ],
+    },
+  };
+}
+
+export default async function Page({ params }: { params: PagePrams }) {
+  const { id } = await params;
 
   return (
     <div className={style.container}>

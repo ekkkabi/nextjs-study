@@ -1,8 +1,7 @@
 import MovieItem from '@/components/movie-item';
-import MovieListSkeleton from '@/components/skeleton/movie-list-skeleton';
 import { API, apiKey } from '@/constants/api';
 import { MovieData } from '@/types';
-import { Suspense } from 'react';
+import { Metadata } from 'next';
 import style from './page.module.css';
 
 async function AllMovies() {
@@ -25,26 +24,30 @@ async function RecoMovies() {
   return recoMovies.map((ele) => <MovieItem key={ele.id} {...ele} />);
 }
 
-export const dynamic = 'force-dynamic';
+export const metadata: Metadata = {
+  title: '한입 씨네마',
+  description: '한입 씨네마에 등록된 영화를 만나보세요',
+  openGraph: {
+    title: '한입 북스',
+    description: '한입 씨네마에 등록된 영화를 만나보세요',
+    images: ['/thumbnail.png'],
+  },
+};
 
 export default async function Home() {
   return (
     <div className={style.conatiner}>
       <section>
         <h2>지금 가장 추천하는 영화</h2>
-        <Suspense fallback={<MovieListSkeleton count={3} />}>
-          <div className={style.section_recommand}>
-            <RecoMovies />
-          </div>
-        </Suspense>
+        <div className={style.section_recommand}>
+          <RecoMovies />
+        </div>
       </section>
       <section>
         <h3>등록된 모든 영화</h3>
-        <Suspense fallback={<MovieListSkeleton count={10} all={true} />}>
-          <div className={style.section_all_movie}>
-            <AllMovies />
-          </div>
-        </Suspense>
+        <div className={style.section_all_movie}>
+          <AllMovies />
+        </div>
       </section>
     </div>
   );
